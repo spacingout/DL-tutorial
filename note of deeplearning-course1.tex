@@ -1,0 +1,206 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage{CJK,indentfirst}%indenfirst宏包允许设置首行缩进
+\usepackage{amsmath}
+\usepackage{graphicx}
+\begin{document}
+
+\begin{CJK*}{UTF8}{gbsn}%用宋体
+
+\part{Neural Networks and Deep Learning}
+ \section{week1:科普.what is deep learning?}
+  \begin{flushleft}
+1、基本概念：
+(1)缩写\\
+\qquad RELU：rectified linear unit\\
+\qquad CNN：convolutional network\\
+\qquad RNN:recurrent NN\\
+(2)小知识点：\\
+\qquad structured data:就是标准数据表格\\
+\qquad unstructured Data：声音信号，图像，文本..\\
+2、应用：\\
+\quad CNN：online advertising、photo tagging\\
+\quad RNN: speech recognition\\
+\quad RNNS: machine translation\\
+\quad HYBIRD: auto driving\\
+3、深度学习的驱动因素\\
+\quad  (1)scale drives deep learning progress(神经网络or训练集)\\
+\quad (2)算法的进化;sigmoid RELU\\
+\quad (3)faster computation\\
+
+\end{flushleft}
+\section{week2 神经网络的编程基础 \\basics of neural network programming}
+ \subsection{01 二分类（binary classification）}
+  \begin{flushleft}
+    符号说明：\\
+\quad    1.第i个样本x$_{(i)}$=[255,215...]:存储了rgb三个通道所有像素值：64*64*3（也即维度）\\
+\quad    2.m表示训练样本数量,M$ _{test}$,M$_{train}$\\
+\quad    3.X表示总的输入矩阵\\
+\quad    4.Y.shape=(1,m)\\
+\quad    5.n$_x$：input size 输入规模，n$_y$:output size 输出规模\\
+   \end{flushleft}   
+    \subsection{02 逻辑回归 Logistic Regression}
+\begin{flushleft}
+    1.yhat=P(y=1$|$ $_X$)\verb|-->|y hat 意思是对于x，输出y=1的几率\\
+    2.yhat=sigmoid(W$^{T}$X+b)\\
+\end{flushleft}   
+
+    \subsection{03 逻辑回归的代价函数 cost function of logistic regression}
+\begin{flushleft}   
+    1、loss function：L(yhat,y)=-[ylogyhat+(1-y)log(1-yhat)]\\
+    2、cost function: L(w,b)=1/m +$\sum$\L(yhat,y)\\
+\end{flushleft} 
+    \subsection{04 梯度下降 Gradient Descent}
+\begin{flushleft}     
+    1、J is a convex function\\
+    2、几乎所有方法对于初始化J都有用，通常初始化wb为0\\
+    3、求J的最小值就是利用求偏导数来确定下降的方向，并依靠α确定每一步下降的距离，并这样一步一步不断迭代直到得到的最小值.\\
+\end{flushleft}  
+    \subsection{11,12 向量化 Vectorization}
+\begin{flushleft}
+
+    
+   举了两个向量相乘的栗子和普通for循环作对比，看出向量化特别的快\\
+    BTW,常用对向量进行的操作\\   (1)np.dot(a,c)意为两个矩阵点乘\\
+    					    (2)np.exp(v)意为将v的每项指数化并求和 \\
+    					    (3)np.log表示求对数，np.abss表示求绝对值\\
+    					    (4)np.maximum,v**2\\
+                            (5)把向量拍扁：\\
+                            flatten a matrix X of shape (a,b,c,d) to a matrix X\verb|_| flatten of shape    
+                            (b∗∗c∗∗d, a) is to use:\\
+                            X\verb|_|flatten = X.reshape(X.shape[0], -1).T     X.T is the transpose of X
+\end{flushleft}
+     \subsection{assignment:logistic regression with a neural net work mindset}
+\begin{flushleft}     
+      1、steps for pre-processing a new dataset are:
+
+    (1)看清楚模样：Figure out the dimensions and shapes of the problem (m\verb|_|train, m\verb|_|test, num\verb|_|px, ...)\\
+\qquad  多少个受训的：m\verb|_|train = train\verb|_|set\verb|_|x\verb|_|orig.shape[0]\\
+\qquad  多少个小白鼠：m\verb|_|test = test\verb|_|set\verb|_|x\verb|_|orig.shape[0]\\
+\qquad  每个边的像素：num\verb|_|px = train\verb|_|set\verb|_|x\verb|_|orig.shape[1]\\
+    (2)拍扁：Reshape the datasets such that each example is now a vector of size (num\verb|_|px * num\verb|_|px * 3, 1)\\
+        use:train\verb|_|set\verb|_|x\verb|_|flatten=train\verb|_|set\verb|_|x\verb|_|orig.reshape(train\verb|_|set\verb|_|x\verb|_|orig.shape[0],-1).T\\
+    (3)九九归一："Standardize" the data\\
+    use：train\verb|_|set\verb|_|x = train\verb|_|set\verb|_|x\verb|_|flatten/255.\\
+\end{flushleft}
+\section{week3 神经网络的编程基础 basics of neural network programming}
+  \subsection{01-Neural Networks Overview}
+\begin{flushleft}
+1、符号表示:上标方括号表示第几层，上标圆括号表示第几个样本\\
+\end{flushleft}
+  \subsection{02 neural network representation神经网络的表示}
+  1、hidden layer之所以叫hidden是因为我们在训练是可以看到输入值和准确值，但hidden值是看不到的\\
+  2、 a$^{[0]}$  用来表示输入层（即那一堆x），a$^{[1]}$表示hidden layer...\\
+  且数层数的时候，往往不把输入层算作层数里面。\\
+  \subsection{03 computin a Neural Network's output}
+  1、其实就是将前面学过的regression在每个x上都来一次\\
+  2、重点还是要理解矩阵思想 Z$^{[1]}$=W$^{[1]}$a$^{[0]}$+b$^{[1]}$\\
+  \subsection{04 vectorizing across multiple examples}
+\begin{flushleft}
+1、for i=1 to m:\\
+\qquad Z$^{[1](i)}$=W$^{[1]}$x$^{(i)}$+b$^{[1]}$\\
+\qquad a$^{[1](i)}$=σ(Z$^{[1](i)}$)\\
+\qquad Z$^{[2](i)}$=W$^{[2]}$a$^{[1](i)}$+b$^{[2]}$\\
+\qquad a$^{[2](i)}$=σ(Z$^{[2](i)}$)\\
+就是这样，然后把Z挨个排起来形成矩阵就好了，X也是是x的横向堆叠。
+\end{flushleft}
+\subsection{05 向量化实现解释Explanation for vectorized implementation}
+
+
+
+\includegraphics[width=4.5in,height=3.5in]{vectorizing.jpg}
+\subsection{06 Activation function}
+\begin{flushleft}
+1、除了输出层，tanh函数的表现几乎都要比sigmoid函数要好\\
+2、ReLu：a=max(0,z),即z大于0导数为1，a=z否则a=0;\\
+3、经验之谈：\\
+\quad (1)如果输出为0or1,sigmoid很适合作为输出层的激活函数。\\
+\quad (2)其他单元都用ReLu\\
+\end{flushleft}
+\includegraphics[width=4.5in,height=1.5in]{activation_function.jpg}\\
+\subsection{07 Why do you need non-linear activation functions?}
+\begin{flushleft}
+1、如果激活函数是线性的，那就是一直拿着一条直线转圈，缺乏非线性表出的能力\\
+\end{flushleft}
+\subsection{08 Derivatives of activation functions}
+\begin{flushleft}
+1、sigmoid函数的导数为g(z)(1-g(z))\\
+\includegraphics[width=4.9in,height=1.9in]{derivative_sigmoid.jpg}\\
+2、tanh函数的导数为1-(tanh)$^2$\\
+\includegraphics[width=4.9in,height=1.9in]{derivative_tanh.jpg}\\
+3、ReLu的导数很简单，就是分段\\
+\includegraphics[width=4.9in,height=1.9in]{derivative_ReLu.jpg}\\
+\end{flushleft}
+\subsection{09 Gradient descent for neural networks}
+\begin{flushleft}
+1、cost function :\\
+\begin{equation*}
+J = \frac{1}{m}\sum_{i=1}^nL(yhat,y)   
+\end{equation*}
+2、六个重要公式\\
+\includegraphics[width=4.9in,height=1.9in]{computing_derivatives.jpg}\\
+\end{flushleft}
+\subsection{10 Backpropagation intuition}
+\begin{flushleft}
+1、回顾一下logistic regression：\\
+1)\[ \frac{\partial L}{\partial a}
+=\left. \frac{-y}{a}
++ \frac{1-y}{1-a}\right.\]
+2) \[ \frac{\partial L}{\partial a}=a-y\]
+3)
+\begin{center}
+dw=dz*x\\
+db=dz\\
+\end{center}
+2、神经网络的后向传播和logistic regression差不多，尤其是从L经过a$^{[2]}$到z$^{[2]}$的过程几乎是一样的\\
+比较特殊的一个dZ$^{[1]}$=W$^{[2]T}$dZ$^{[2]}$*g$^{[1]'}$(Z$^{[1]}$)\\
+下图是neural network gradient的全部公式：\\
+\includegraphics[width=4.9in,height=1.9in]{neural_gradients.jpg}\\
+3.下图是对梯度下降公式的一个总结：\\
+\includegraphics[width=4.9in,height=2.3in]{summary_gradient_descent.jpg}\\
+\end{flushleft}
+\subsection{11 Random Initialization}
+1、不要都初始化为0（这样的化多层隐藏单元就没有意义了）而是应该选择随机初始化。\\
+2、初始化语句：\\
+\quad W$^{[1]T}$=np.random.randn((2,2))*0.01\\
+\quad b$^{[1]T}$=np.zero((2,1)),因为b无所谓随不随机\\  
+W$^{[2]T}$和bW$^{[2]T}$初始化与上面相同\\
+W要乘0.01是因为如果数字太大的化，最终回落在sigmoid或tanh的平缓部分，这样会使得学习效率很低\\
+\section{week4  Deep layer Neural network}
+\subsection{01 Deep L-layer Neural network}
+\begin{flushleft}
+1、L表示神经网络的层数（不包括输入层),下图是具体的栗子：\\
+\includegraphics[width=5.3in,height=2.8in]{DNN_notation.jpg}\\
+\end{flushleft}
+\subsection{02 forward and backward propagation}
+\begin{flushleft}
+1、Z$^{[l]}$=W$^{[l]}$A$^{[l-1]T}$+b$^{[l]}$ \\
+2、A$^{[l]}$=g$^{[l]}$（Z$^{[l]}$）
+3、反向传播的公式如下：\\
+\includegraphics[width=5.3in,height=2.8in]{backpro.jpg}\\
+4、四层nn的前向传播和后向传播流程图如下：\\
+\includegraphics[width=5.3in,height=2.8in]{structure_pro_back.jpg}\\
+\subsection{04 Getting your matrix dimensions right}
+\begin{flushleft}
+1、根据矩阵的乘法规则，我们知道，W$^{[l]}$的维度一定是(n$^{[l]}$，n$^{[l-1]}$)\\
+2、同理，b$^{[l]}$的维度一定是(n$^{[l]}$，1)\\
+3、当然dW的维度和W一样，db的维度和b一样\\
+4、Z和a的维度应该相等，为（n$^{[l]}$,m）,其中m是训练集的个数\\
+5、老师笔记如下：\\
+\includegraphics[width=5.3in,height=2.8in]{dimension_parameter.jpg}
+\end{flushleft}
+\subsection{05 Why deep representations?}
+\begin{flushleft}
+1、人脸识别的大概流程（整体思想就是从简单到复杂）：第一层，先用边缘检测识别边缘，再识别一个部位，再逐步扩大\\
+2、语音识别也是类似，先分辨声音高低是不是杂音，再识别音位再识别单词再识别句子\\
+3、但也不要一味的用太多层数，适当就好\\
+\end{flushleft}
+\subsection{06 Building blocks of deep neural network}
+\begin{flushleft}
+1、以下是NN实现时的总体结构图：\\
+\includegraphics[width=5.3in,height=2.8in]{for_back_fun.jpg}\\
+
+\end{flushleft}
+\end{flushleft}
+\end{CJK*}
+\end{document}
